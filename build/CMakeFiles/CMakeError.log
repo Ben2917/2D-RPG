@@ -1,0 +1,57 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/fedora-22/Documents/SDLGameC++/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTryCompileExec929664748/fast"
+/usr/bin/gmake -f CMakeFiles/cmTryCompileExec929664748.dir/build.make CMakeFiles/cmTryCompileExec929664748.dir/build
+gmake[1]: Entering directory '/home/fedora-22/Documents/SDLGameC++/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/fedora-22/Documents/SDLGameC++/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec929664748.dir/CheckSymbolExists.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec929664748.dir/CheckSymbolExists.c.o   -c /home/fedora-22/Documents/SDLGameC++/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTryCompileExec929664748
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec929664748.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTryCompileExec929664748.dir/CheckSymbolExists.c.o  -o cmTryCompileExec929664748 -rdynamic 
+CMakeFiles/cmTryCompileExec929664748.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x16): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTryCompileExec929664748.dir/build.make:88: recipe for target 'cmTryCompileExec929664748' failed
+gmake[1]: Leaving directory '/home/fedora-22/Documents/SDLGameC++/build/CMakeFiles/CMakeTmp'
+Makefile:117: recipe for target 'cmTryCompileExec929664748/fast' failed
+gmake[1]: *** [cmTryCompileExec929664748] Error 1
+gmake: *** [cmTryCompileExec929664748/fast] Error 2
+
+File /home/fedora-22/Documents/SDLGameC++/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/fedora-22/Documents/SDLGameC++/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTryCompileExec3765603963/fast"
+/usr/bin/gmake -f CMakeFiles/cmTryCompileExec3765603963.dir/build.make CMakeFiles/cmTryCompileExec3765603963.dir/build
+gmake[1]: Entering directory '/home/fedora-22/Documents/SDLGameC++/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/fedora-22/Documents/SDLGameC++/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3765603963.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTryCompileExec3765603963.dir/CheckFunctionExists.c.o   -c /usr/share/cmake/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec3765603963
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3765603963.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTryCompileExec3765603963.dir/CheckFunctionExists.c.o  -o cmTryCompileExec3765603963 -rdynamic -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTryCompileExec3765603963.dir/build.make:88: recipe for target 'cmTryCompileExec3765603963' failed
+gmake[1]: Leaving directory '/home/fedora-22/Documents/SDLGameC++/build/CMakeFiles/CMakeTmp'
+Makefile:117: recipe for target 'cmTryCompileExec3765603963/fast' failed
+gmake[1]: *** [cmTryCompileExec3765603963] Error 1
+gmake: *** [cmTryCompileExec3765603963/fast] Error 2
+
+

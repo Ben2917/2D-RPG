@@ -1,0 +1,8 @@
+[stats]
+
+all player statistics
+
+[globals]
+
+global booleans to show what player has completed
+
