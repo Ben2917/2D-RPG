@@ -10,11 +10,11 @@ int DirectoryHandler::ReadDirectory(std::string dir_name,
     std::vector<std::string> &filenames)
 {
     // builds but needs testing.
-    #ifdef _WIN32
+    #ifdef __WIN32__
 
         ReadWindowsDirectory(dir_name, filenames);
 
-    #elif _linux
+    #elif __linux__
 
         ReadLinuxDirectory(dir_name, filenames);
 

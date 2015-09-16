@@ -141,7 +141,7 @@ void Level::LoadMap(std::string file_dir, int &level_w, int &level_h)
 }
 
 
-void Level::HandleExceptions(int e)
+void Level::HandleExceptions(int e, std::string resource_dir)
 {
 
     switch(e)

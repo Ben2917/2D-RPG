@@ -1,9 +1,9 @@
 
+
 #include <iostream>
-
 #include <string>
-
 #include <sstream>
+
 
 #include "game.h"
 
@@ -27,40 +27,28 @@ int CharPointerToInt(char* arg)
 int ArgParser(int argc, char* argv[])
 {
 
-    if(argc == 1)
+    if(argc < 3)
     {
 
-        // Run main menu
-        return 0;
+        std::cout << "Too few arguments.\n"
+            << "Usage:\n./<name>\n./<name> x y updates\n";
+        return -1;
 
     }
     else
     {
 
-        if(argc < 3)
-        {
-
-            std::cout << "Too few arguments.\n"
-                << "Usage:\n./<name>\n./<name> x y updates\n";
-            return -1;
-
-        }
-        else
-        {
-
-            int x = CharPointerToInt(argv[1]);
+        int x = CharPointerToInt(argv[1]);
  
-            int y = CharPointerToInt(argv[2]);
+        int y = CharPointerToInt(argv[2]);
 
-            int updates = CharPointerToInt(argv[3]);
+        int updates = CharPointerToInt(argv[3]);
 
-            Game game(x, y, updates);
+        Game game(x, y, updates);
 
-            game.Run();
+        game.Run();
 
-            return 0;
-
-        }
+        return 0;
 
     }
 
