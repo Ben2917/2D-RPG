@@ -113,6 +113,10 @@ memory
 -
 string
 -
+exception
+-
+iostream
+-
 
 /home/fedora-22/Documents/SDLGameC++/src/gamewindow.cpp
 iostream
@@ -144,6 +148,8 @@ map
 vector
 -
 memory
+-
+exception
 -
 dirhandler.h
 /home/fedora-22/Documents/SDLGameC++/src/dirhandler.h

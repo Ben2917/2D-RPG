@@ -8,13 +8,11 @@
 #include <SDL_image.h>
 
 
-// Will need to include the exception system here.
-
-
 #include <string>
 #include <map>
 #include <vector>
 #include <memory>
+#include <exception>
 
 
 #include "dirhandler.h"
@@ -25,6 +23,73 @@
 // levels need to include information on on what levels they are connected to
 // so that when a player gets to the edge of the level the game knows which
 // level to load next.
+
+
+class DirectoryError : public std::exception
+{
+
+
+    public:
+
+
+        DirectoryError(std::string dir_name);
+
+
+        virtual const char* what();
+
+
+    protected:
+
+
+        std::string message;
+
+
+};
+
+
+class MapFindError : public std::exception
+{
+
+
+    public:
+
+
+        MapFindError(std::string dir_name);
+
+
+        virtual const char* what();
+
+
+    protected:
+
+
+        std::string message;
+
+
+};
+
+
+class MapLoadError : public std::exception
+{
+
+
+    public:
+
+
+        MapLoadError();
+
+
+        virtual const char* what();
+
+
+    protected:
+
+
+        std::string message;
+
+
+};
+
 
 class Level
 {
@@ -52,11 +117,6 @@ class Level
     private:
 
 
-        enum Exceptions {
-            DIR_ERROR, MAP_FIND_ERROR, 
-            TILE_ERROR, MAP_LOAD_ERROR };
-
-
         // Player exists as part of a level
         // need to have player load a file that
         // stores information on how it should look
@@ -75,7 +135,8 @@ class Level
         std::vector<GameObject> level_objects;
 
 
-        void FindLevelMapFile(std::vector<std::string> &filenames);
+        void FindLevelMapFile(std::string dir_name, 
+            std::vector<std::string> &filenames);
 
 
         int LoadTiles(SDL_Renderer* ren, std::vector<std::string> filenames);
@@ -83,9 +144,6 @@ class Level
 
         // Loads all tiles and level objects into their positions.
         void LoadMap(std::string file_dir, int &level_w, int &level_h);
-
-
-        void HandleExceptions(int e, std::string resource_dir);
 
 
 };

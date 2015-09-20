@@ -3,6 +3,55 @@
 #include "level.h"
 
 
+DirectoryError::DirectoryError(std::string dir_name)
+{
+
+    message = std::string("Error finding directory ") + dir_name;
+
+}
+
+
+const char* DirectoryError::what()
+{
+
+    return message.c_str();
+
+}
+
+
+MapFindError::MapFindError(std::string dir_name)
+{
+
+    message = std::string("Couldn't find map file in directory ") +
+        dir_name;
+
+}
+
+
+const char* MapFindError::what()
+{
+
+    return message.c_str();
+
+}
+
+
+MapLoadError::MapLoadError()
+{
+
+    message = std::string("Error loading map file. It may be corrupted");
+
+}
+
+
+const char* MapLoadError::what()
+{
+
+    return message.c_str();
+
+}
+
+
 Level::Level(){}
 
 
@@ -17,7 +66,7 @@ Level::Level(SDL_Renderer* ren, std::string resource_dir,
 
         d_handler.ReadDirectory(resource_dir, filenames);
 
-        FindLevelMapFile(filenames);
+        FindLevelMapFile(resource_dir, filenames);
 
         LoadTiles(ren, filenames);
 
@@ -29,12 +78,20 @@ Level::Level(SDL_Renderer* ren, std::string resource_dir,
             new PhysicsComponent(), new ControlComponent());
 
     }
-    catch(int e)
+    catch(std::exception e)
     {
 
-        HandleExceptions(e, resource_dir);
+        ErrorPrinter::PrintError(e.what());
 
     }
+    catch(...)
+    {
+
+        ErrorPrinter::PrintError
+            ("Unexpected error occurred constructing level");
+
+    }
+
 
 }
 
@@ -70,7 +127,8 @@ void Level::Update(SDL_Renderer* ren, SDL_Rect camera, float frame_time)
 }
 
 
-void Level::FindLevelMapFile(std::vector<std::string> &filenames)
+void Level::FindLevelMapFile(std::string dir_name, 
+    std::vector<std::string> &filenames)
 {
 
     bool file_found = false;
@@ -90,7 +148,7 @@ void Level::FindLevelMapFile(std::vector<std::string> &filenames)
     if (!file_found)
     {
 
-        throw MAP_FIND_ERROR;
+        throw MapFindError(dir_name);
 
     }
 
@@ -124,7 +182,7 @@ void Level::LoadMap(std::string file_dir, int &level_w, int &level_h)
     if(d_handler.ReadFile(file_dir, "map.txt", c_map_str) < 0)
     {
 
-        throw MAP_LOAD_ERROR;
+        throw MapLoadError();
 
     }
 
@@ -137,36 +195,5 @@ void Level::LoadMap(std::string file_dir, int &level_w, int &level_h)
     //
     // maybe parse the string into modules and pass each module into the
     // function that it has information on.
-
-}
-
-
-void Level::HandleExceptions(int e, std::string resource_dir)
-{
-
-    switch(e)
-    {
-
-        case DIR_ERROR:
-            ErrorPrinter::PrintError("Error opening directory " +
-                resource_dir);
-            break;
-        case MAP_FIND_ERROR:
-            ErrorPrinter::PrintError("Map file absent from directory " +
-                resource_dir);
-            break;
-        case TILE_ERROR:
-            ErrorPrinter::PrintError("Error lodaing one or more tiles.");
-            break;
-        case MAP_LOAD_ERROR:
-            ErrorPrinter::PrintError(
-                "Error parsing map file. It may have become corrupted.");
-            break;
-        default: 
-            ErrorPrinter::PrintError(
-                "An unexpected exception has occurred.");
-            break;
-
-    }
 
 }

@@ -10,6 +10,30 @@
 
 #include <memory>
 #include <string>
+#include <exception>
+#include <iostream>
+
+
+class TextureError : public std::exception
+{
+
+    
+    public:
+
+
+        TextureError(std::string tex_name);
+
+
+        virtual const char* what();
+
+
+    protected:
+
+
+        std::string message;
+
+
+};
 
 
 class GameTexture
