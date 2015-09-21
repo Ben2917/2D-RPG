@@ -68,6 +68,8 @@ Level::Level(SDL_Renderer* ren, std::string resource_dir,
 
         FindLevelMapFile(resource_dir, filenames);
 
+        // organise filenames according to key
+
         LoadTiles(ren, filenames);
 
         LoadMap(resource_dir, level_w, level_h);
@@ -161,12 +163,9 @@ int Level::LoadTiles(SDL_Renderer* ren, std::vector<std::string> filenames)
     for(unsigned int i = 0; i < filenames.size(); ++i)
     {
 
-        // needs testing, may not work.
         tiles.insert(std::pair<std::string, GameTexture>
             (filenames[i], GameTexture(0, 0, ren, filenames[i])));
-
-        // need to find a way to check for null textures in game texture
-        // and throw tile error in this case.               
+                      
     }
 
     return 0;
@@ -186,13 +185,15 @@ void Level::LoadMap(std::string file_dir, int &level_w, int &level_h)
 
     }
 
-    // parse the string to get data on tiles (locations 
-    // and which assets to load) and level objects including their
-    // locations, assets and collision boxes. Should also read level 
-    // width and height.
-    // should return negative numbers for each of the errors that could occur.
-    // enemies should also be loaded here.
-    //
+    // find marker that marks where the level map begins
+    // load map into two dimensional array
+
+    // need to load each level into 640 by 640 tiles and load a collision
+    // rectangle for each collidable part.
+
+    std::array<std::array<int, 50>, 50> map;
+
+
     // maybe parse the string into modules and pass each module into the
     // function that it has information on.
 

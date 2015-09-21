@@ -13,6 +13,7 @@
 #include <vector>
 #include <memory>
 #include <exception>
+#include <sstream>
 
 
 #include "dirhandler.h"
@@ -91,6 +92,41 @@ class MapLoadError : public std::exception
 };
 
 
+// Level chunks store a 640 by 640 texture made up of tiles,
+// a vector of game objects that appear in the chunk and
+// a vector of rectangles to check the player's collision against.
+class LevelChunk
+{
+
+
+    public:
+
+
+        LevelTile(SDL_Renderer* ren);
+
+
+        void Update(SDL_Renderer* ren);
+
+
+        void AddTile(GameTexture tex, bool collidable);
+
+
+        // collision is checked in player. This means this class
+        // needs to return it's collision rects.
+
+
+    private:
+
+
+        std::vector<SDL_Rect> collision_rects;
+
+        
+        std::unique_ptr<SDL_Texture, void(*)(SDL_Texture*)> tex;
+        
+        
+};
+
+
 class Level
 {
 
@@ -117,17 +153,19 @@ class Level
     private:
 
 
-        // Player exists as part of a level
-        // need to have player load a file that
-        // stores information on how it should look
-        // and all of its stats, inventory etc.
         GameObject player;
 
         
         DirectoryHandler d_handler;
 
 
-        std::map<std::string, GameTexture> tiles;
+        std::vector<std::string> tile_key;
+
+
+        std::vector<GameTexture> tiles;
+
+
+        std::vector<LevelTile> level_tiles;
         
 
         // not sure if need map or vector
