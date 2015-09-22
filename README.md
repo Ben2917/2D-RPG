@@ -7,5 +7,4 @@ The following files are covered under the MIT License, not the GNU GPL 2 License
 FindSDL2.cmake
 FindSDL2_image.cmake
 
-Please see this page https://github.com/Twinklebear/TwinklebearDev-Lessons/blob/master/LICENSE.md
-to view the license that covers this content.
+Please see the comments at the top of these files to view the license that covers this content.
