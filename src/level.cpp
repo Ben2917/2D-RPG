@@ -52,6 +52,61 @@ const char* MapLoadError::what()
 }
 
 
+LevelChunk::LevelChunk(SDL_Renderer* ren, int x, int y)
+    : tex(SDL_CreateTexture(ren, SDL_PIXELFORMAT_RGBA8888,
+    SDL_TEXTUREACCESS_TARGET, 640, 640), SDL_DestroyTexture)
+{
+
+    dest = {x, y, 640, 640};
+
+}
+
+
+void LevelChunk::Update(SDL_Renderer* ren, SDL_Rect camera)
+{
+
+    // Draw chunk texture relative to camera
+    
+    // Draw objects in chunk relative to camera
+
+}
+
+
+void LevelChunk::AddTile(SDL_Renderer* ren, GameTexture tex, bool collidable)
+{
+
+    SDL_SetRenderTarget(ren, this->tex.get()); // render to chunk texture
+
+    SDL_RenderCopy(ren, tex.Tex(), NULL, tex.Rect());
+
+    SDL_SetRenderTarget(ren, NULL);
+
+    if(collidable)
+    {
+
+        collision_rects.push_back(tex.Rect());
+
+    }
+
+}
+
+
+void LevelChunk::AddObject(GameObject obj)
+{
+
+    objects.push_back(obj);
+
+}
+
+
+std::vector<SDL_Rect> LevelChunk::GetCollisionRects()
+{
+
+    return collision_rects;
+
+}
+
+
 Level::Level(){}
 
 
@@ -64,20 +119,32 @@ Level::Level(SDL_Renderer* ren, std::string resource_dir,
     try
     {
 
-        d_handler.ReadDirectory(resource_dir, filenames);
+        // d_handler.ReadDirectory(resource_dir, filenames);
 
-        FindLevelMapFile(resource_dir, filenames);
+        // FindLevelMapFile(resource_dir, filenames);
 
-        // organise filenames according to key
+        if(d_handler.SearchDirectory("map.txt", resource_dir))
+        {
+
+            LoadMap(resource_dir, level_w, level_h);
+        // load map must load the tile key. The tiles must then
+        // be loaded by searching the directory and confirming
+        // that the files are there before loading.
 
         LoadTiles(ren, filenames);
-
-        LoadMap(resource_dir, level_w, level_h);
 
         player = GameObject(std::string("scripts/player.lua"),
             std::string("player"), std::string("save_file.txt"),
             new AnimatedGraphicsComponent(ren, "resources/player"),
             new PhysicsComponent(), new ControlComponent());
+
+        }
+        else
+        {
+
+            std::cout << "No valid map file was found in this directory.";
+
+        }
 
     }
     catch(std::exception e)

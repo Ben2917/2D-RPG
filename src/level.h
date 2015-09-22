@@ -102,27 +102,46 @@ class LevelChunk
     public:
 
 
-        LevelTile(SDL_Renderer* ren);
+        LevelChunk(SDL_Renderer* ren, int x, int y);
+
+        // Draw the chunk texture and any objects in the chunk to the renderer
+        // keeping them relative to the camera.
+        void Update(SDL_Renderer* ren, SDL_Rect camera);
 
 
-        void Update(SDL_Renderer* ren);
+        // Draws a tile to the chunk texture
+        // if collidable is true tex's rect will 
+        // be pushed into the collision rects
+        void AddTile(SDL_Renderer* ren, GameTexture tex, bool collidable);
 
 
-        void AddTile(GameTexture tex, bool collidable);
+        // Adds a game object 
+        void AddObject(GameObject obj);
 
 
-        // collision is checked in player. This means this class
-        // needs to return it's collision rects.
-
+        // Returns the collision rects of the tile
+        // so that they can be passed to player and
+        // collision can be checked
+        std::vector<SDL_Rect> GetCollisionRects();
+        
 
     private:
 
-
+        
         std::vector<SDL_Rect> collision_rects;
 
-        
+
+        // Stores game objects and level triggers that appear in the
+        // chunk
+        std::vector<GameObject> objects;
+
+        // The main texture of the chunk
         std::unique_ptr<SDL_Texture, void(*)(SDL_Texture*)> tex;
-        
+ 
+
+        // The destination for the main chunk texture.
+        SDL_Rect dest;
+       
         
 };
 
@@ -162,25 +181,18 @@ class Level
         std::vector<std::string> tile_key;
 
 
-        std::vector<GameTexture> tiles;
+        // Chunks are the components that make up levels
+        std::vector<LevelChunk> chunks;
 
 
-        std::vector<LevelTile> level_tiles;
-        
-
-        // not sure if need map or vector
-        // std::map<std::string, GameObject> level_objects;
-        std::vector<GameObject> level_objects;
-
-
+        // Checks directory for level map file
         void FindLevelMapFile(std::string dir_name, 
             std::vector<std::string> &filenames);
 
-
+      
         int LoadTiles(SDL_Renderer* ren, std::vector<std::string> filenames);
 
 
-        // Loads all tiles and level objects into their positions.
         void LoadMap(std::string file_dir, int &level_w, int &level_h);
 
 

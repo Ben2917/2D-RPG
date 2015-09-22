@@ -3,6 +3,70 @@
 #include "dirhandler.h"
 
 
+UnsupportedOS::UnsupportedOS()
+{
+
+    message = "This operating system is unsupported.";
+
+}
+
+
+const char* UnsupportedOS::what()
+{
+
+    return message.c_str();
+
+}
+
+
+DirectoryError::DirectoryError(std::string dir_name)
+{
+
+    message = std::string("Error opening directory ") + dir_name;
+
+}
+
+
+const char* DirectoryError::what()
+{
+
+    return message.c_str();
+
+}
+
+
+FileReadError::FileReadError(std::string filename)
+{
+
+    message = std::string("Error reading file: ") + filename;
+
+}
+
+
+const char* FileReadError::what()
+{
+
+    return message.c_str();
+
+}
+
+
+FileWriteError::FileWriteError(std::string filename)
+{
+
+    message = std::string("Error writing to file ") + filename;
+
+}
+
+
+const char* FileWriteError::what()
+{
+
+    return message.c_str();
+
+}
+
+
 DirectoryHandler::DirectoryHandler(){}
 
 
@@ -10,7 +74,11 @@ int DirectoryHandler::ReadDirectory(std::string dir_name,
     std::vector<std::string> &filenames)
 {
     // builds but needs testing.
-    #ifdef __WIN32__
+    #ifdef __WIN64__
+
+        ReadWindowsDirectory(dir_name, filenames);
+
+    #elif __WIN32__
 
         ReadWindowsDirectory(dir_name, filenames);
 
@@ -18,10 +86,13 @@ int DirectoryHandler::ReadDirectory(std::string dir_name,
 
         ReadLinuxDirectory(dir_name, filenames);
 
+    #elif __unix__
+
+        ReadLinuxDirectory(dir_name, filenames);
+
     #else
 
-        ErrorPrinter::PrintError(
-            "This operating system is not supported\n");
+        throw UnsupportedOS();
 
     #endif // OS check
 
@@ -37,9 +108,7 @@ int DirectoryHandler::ReadFile(std::string file_directory,
     if(!file.is_open())
     {
 
-        ErrorPrinter::PrintError("Problem opening file in directory "
-            + file_directory + " with the name " + filename); 
-        return -1;
+        throw FileReadError(filename);
 
     }
     else
@@ -56,9 +125,103 @@ int DirectoryHandler::ReadFile(std::string file_directory,
 
     }
 
+    // may want to perform a checksum.
+
     return 0;
 
 }
+
+
+bool DirectoryHandler::SearchDirectory(std::string filename, 
+    std::string dir_name)
+{
+
+    std::vector<std::string> filenames;
+
+    ReadDirectory(dir_name, filenames);
+
+    for(unsigned int i = 0; i < filenames.size(); ++i)
+    {
+
+        if(filename == filenames[i])
+        {
+
+            return true;
+
+        }
+
+    }
+
+    return false;
+
+}
+
+
+void DirectoryHandler::Write2DIntArrayToFile(std::array<std::array
+    <int, 50>, 50> arr, std::string file_name, std::string directory)
+{
+
+    std::ofstream map_file(std::string
+        (directory + "/" + file_name), std::ios::app);
+
+    if(!map_file.is_open())
+    {
+
+        throw FileWriteError(file_name);
+
+    }
+    
+    for (int i = 0; i < 50; ++i)
+    {
+
+        std::string temp = "";
+
+        for (int x = 0; x < 50; ++x)
+        {
+
+            temp += std::to_string(arr[i][x]);
+
+        }
+
+        temp += "\n";
+
+        map_file << temp;
+
+    }
+
+    map_file.close();
+
+    // Add "File written successfully." to print list. 
+    // Should appear for two seconds.
+
+}
+
+
+void DirectoryHandler::WriteStringVectorToFile(std::vector<std::string> key,
+    std::string file_name, std::string dir_name)
+{
+
+    std::ofstream file(std::string(dir_name + "/" + file_name));
+
+    if(!file.is_open())
+    {
+
+        throw FileWriteError(file_name);
+
+    }
+
+    for(unsigned int i = 0; i < key.size(); ++i)
+    {
+
+        file << std::string(key[i]) + "\n";        
+
+        std::cout << key[i] << "\n";
+
+    }
+
+    file.close();
+
+} 
 
 
 int DirectoryHandler::ReadLinuxDirectory(std::string dir_name,
@@ -72,9 +235,7 @@ int DirectoryHandler::ReadLinuxDirectory(std::string dir_name,
     if((dp = opendir(dir_name.c_str())) == NULL)
     {
 
-        ErrorPrinter::PrintError("Error opening directory " + dir_name);
-
-        return -1;
+        throw DirectoryError(dir_name);
 
     }
 
@@ -94,8 +255,6 @@ int DirectoryHandler::ReadLinuxDirectory(std::string dir_name,
 
     closedir(dp);
 
-    return 0;
-
 }
 
 
@@ -110,4 +269,19 @@ int DirectoryHandler::ReadWindowsDirectory(std::string dir_name,
 }
 
 
+void DirectoryHandler::CreateLinuxDirectory(std::string name, 
+    std::string location)
+{
 
+    // To be written
+
+}
+
+
+void DirectoryHandler::CreateWindowsDirectory(std::string name,
+    std::string location)
+{
+
+    // To be written
+
+}

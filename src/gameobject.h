@@ -104,7 +104,7 @@ class PhysicsComponent : public PhysicsBase
 
 
         virtual void Update(GameObject &obj,
-            std::vector<GameObject> objects);
+            std::vector<SDL_Rect> collision_rects);
 
 
     private:
@@ -174,7 +174,7 @@ class GameObject
         // GameObjects don't need to perform the collision check,
         // only the player does.
         void Update(SDL_Rect camera, SDL_Renderer* ren, float frame_time,
-            std::vector<GameObject> objects);
+            std::vector<SDL_Rect> collision_rects);
 
 
         LuaWrapper lua;

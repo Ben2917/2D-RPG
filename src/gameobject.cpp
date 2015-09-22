@@ -120,7 +120,8 @@ PhysicsComponent::PhysicsComponent(){}
 PhysicsComponent::~PhysicsComponent(){}
 
 
-void PhysicsComponent::Update(GameObject &obj, std::vector<GameObject> objects)
+void PhysicsComponent::Update(GameObject &obj, 
+    std::vector<SDL_Rect> collision_rects)
 {
 
     // See if obj rect is within any of the objects' rectangles.
@@ -226,13 +227,13 @@ GameObject::~GameObject(){}
 
 
 void GameObject::Update(SDL_Rect camera, SDL_Renderer* ren, float frame_time,
-    std::vector<GameObject> objects)
+    std::vector<SDL_Rect> collision_rects)
 {
 
 
     control.get()->Update(frame_time, *this);
 
-    physics.get()->Update(*this, objects);
+    physics.get()->Update(*this, collision_rects);
 
     graphics.get()->Update(camera, ren, *this);
 
