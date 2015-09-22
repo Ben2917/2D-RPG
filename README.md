@@ -8,4 +8,4 @@ FindSDL2.cmake
 FindSDL2_image.cmake
 
 Please see this page https://github.com/Twinklebear/TwinklebearDev-Lessons/blob/master/LICENSE.md
-To view the license that covers this content.
+to view the license that covers this content.
