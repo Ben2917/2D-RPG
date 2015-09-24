@@ -4,6 +4,14 @@
 -- This probably isn't the optimum way to do this.
 
 
+-- Need a character class table with values for
+-- str, spd, chr, int and lck all set to 0
+
+-- Player needs to be created with an instance 
+-- of the character class table with the stats
+-- set to reflect the player's class.
+
+
 Player =
 {
 

@@ -124,6 +124,10 @@ class DirectoryHandler
             std::string filename, std::string &content);
 
 
+        std::string ReadFileFromMarkerToMarker(std::string file_dir,
+            std::string filename, std::string from, std::string to);
+
+
         bool SearchDirectory(std::string filename, std::string dir_name);
 
 

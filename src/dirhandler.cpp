@@ -132,6 +132,54 @@ int DirectoryHandler::ReadFile(std::string file_directory,
 }
 
 
+std::string DirectoryHandler::ReadFileFromMarkerToMarker(std::string dir_name,
+    std::string filename, std::string from, std::string to)
+{
+
+    // Function needs testing.
+
+    std::ifstream file(dir_name + "/" + filename);
+
+    if(!file.is_open())
+    {
+
+        throw FileReadError(filename);
+
+    }
+    else
+    {
+
+        std::string temp = "", requested_content = "";
+        bool reading = false;
+
+        while(file >> temp)
+        {
+
+            if(temp == to)
+            {
+
+                reading = false;
+                // break;
+
+            }
+
+            if(temp == from || reading)
+            {
+
+                requested_content += temp;
+                reading = true;
+
+            }
+
+        }
+
+        return requested_content;
+
+    }
+
+}
+
+
 bool DirectoryHandler::SearchDirectory(std::string filename, 
     std::string dir_name)
 {

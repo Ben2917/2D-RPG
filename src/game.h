@@ -17,7 +17,6 @@
 
 
 #include <vector>
-#include <iostream>
 
 
 class Game
@@ -61,6 +60,9 @@ class Game
        
 
         void LoadGame();
+
+
+        bool ParseSaveFile(std::string save_file_str);
 
         
         void EventLoop();

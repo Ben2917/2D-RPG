@@ -2,7 +2,7 @@
 
 #include "level.h"
 
-
+/*
 DirectoryError::DirectoryError(std::string dir_name)
 {
 
@@ -16,7 +16,7 @@ const char* DirectoryError::what()
 
     return message.c_str();
 
-}
+}*/
 
 
 MapFindError::MapFindError(std::string dir_name)
@@ -77,7 +77,10 @@ void LevelChunk::AddTile(SDL_Renderer* ren, GameTexture tex, bool collidable)
 
     SDL_SetRenderTarget(ren, this->tex.get()); // render to chunk texture
 
-    SDL_RenderCopy(ren, tex.Tex(), NULL, tex.Rect());
+    SDL_Rect temp = tex.Rect(); // not sure if problematic as it will
+                                // be out of scope when renderer is displayed.
+
+    SDL_RenderCopy(ren, tex.Tex(), NULL, &temp);
 
     SDL_SetRenderTarget(ren, NULL);
 
@@ -179,11 +182,12 @@ void Level::Update(SDL_Renderer* ren, SDL_Rect camera, float frame_time)
 
     // encapsulate this in it's own function.
 
-    player.Update(camera, ren, frame_time, level_objects);
+    // player.Update(camera, ren, frame_time, current_tile_rects);
  
     // Maybe only draw tiles that are in the camera range.
     // Didn't seem to provide a huge performance boost, however.
    
+    /*
     for(auto itr = tiles.begin(); itr != tiles.end(); ++itr)
     {
      
@@ -191,7 +195,7 @@ void Level::Update(SDL_Renderer* ren, SDL_Rect camera, float frame_time)
    
         SDL_RenderCopy(ren, itr->second.Tex(), NULL, &temp); 
 
-    }
+    }*/
 
 }
 
@@ -227,13 +231,13 @@ void Level::FindLevelMapFile(std::string dir_name,
 int Level::LoadTiles(SDL_Renderer* ren, std::vector<std::string> filenames)
 {
 
-    for(unsigned int i = 0; i < filenames.size(); ++i)
+    /*for(unsigned int i = 0; i < filenames.size(); ++i)
     {
 
         tiles.insert(std::pair<std::string, GameTexture>
             (filenames[i], GameTexture(0, 0, ren, filenames[i])));
                       
-    }
+    }*/
 
     return 0;
 
@@ -245,12 +249,30 @@ void Level::LoadMap(std::string file_dir, int &level_w, int &level_h)
 
     std::string c_map_str;
 
-    if(d_handler.ReadFile(file_dir, "map.txt", c_map_str) < 0)
+    try
+    {
+
+        std::string tile_key_str = d_handler.ReadFileFromMarkerToMarker(
+            file_dir, "map.txt", "[tile key]", "[objects/script triggers]");
+
+        ParseTileKeyString(tile_key_str);
+        // Load tile key string into tile vector.
+
+    }
+    catch(...)
+    {
+
+        ErrorPrinter::PrintError("Error getting tile key string.");
+
+    }
+
+
+    /*if(d_handler.ReadFile(file_dir, "map.txt", c_map_str) < 0)
     {
 
         throw MapLoadError();
 
-    }
+    }*/
 
     // find marker that marks where the level map begins
     // load map into two dimensional array
@@ -265,3 +287,66 @@ void Level::LoadMap(std::string file_dir, int &level_w, int &level_h)
     // function that it has information on.
 
 }
+
+
+void Level::ParseTileKeyString(std::string tile_key_string)
+{
+
+    for(unsigned int i = 0; i < tile_key_string.length(); ++i)
+    {
+
+        std::string temp = "";
+        
+        if(tile_key_string[i] != '\n')
+        {
+
+            temp += tile_key_string[i];
+
+        }
+        else
+        {
+
+            try
+            {
+
+                LoadTileKey(temp);
+
+            }
+            catch(...)
+            {
+
+                ErrorPrinter::PrintError(
+                    "Exceptions have occurred while loading tile key.");
+
+            }
+
+        }
+
+    }
+
+}
+
+
+void Level::LoadTileKey(std::string tile_key_string)
+{
+
+    // needs thorough testing
+
+    std::stringstream temp_stream;
+
+    int index = 0;
+
+    temp_stream << tile_key_string[0];
+
+    if(!temp_stream >> index)
+    {
+
+        throw 0; // Write exception class for this.
+
+    }
+    
+    // modify to support different formats
+    tile_key[index] = tile_key_string.substr(4, tile_key_string.length() - 1);
+
+}
+

@@ -43,7 +43,7 @@ class PhysicsBase
 
 
         virtual void Update(GameObject &obj,
-            std::vector<SDL_Rect> collision_rects);
+            std::vector<SDL_Rect> collision_rects) = 0;
 
 
         virtual ~PhysicsBase(){}

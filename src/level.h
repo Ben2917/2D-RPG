@@ -25,7 +25,7 @@
 // so that when a player gets to the edge of the level the game knows which
 // level to load next.
 
-
+/*
 class DirectoryError : public std::exception
 {
 
@@ -45,7 +45,7 @@ class DirectoryError : public std::exception
         std::string message;
 
 
-};
+};*/
 
 
 class MapFindError : public std::exception
@@ -178,6 +178,8 @@ class Level
         DirectoryHandler d_handler;
 
 
+        // may be better as a standard array to that the 
+        // loading tile names in at the correct indices is easier.
         std::vector<std::string> tile_key;
 
 
@@ -194,6 +196,18 @@ class Level
 
 
         void LoadMap(std::string file_dir, int &level_w, int &level_h);
+
+
+        /*
+         * Loads the file names in the tile key string into the 
+         * indices that they correspond to in the tile key array
+         * @param tile_key_string - String loaded with the tile
+         * key information from the map file.
+        */
+        void ParseTileKeyString(std::string tile_key_string);
+
+
+        void LoadTileKey(std::string tile_key_string);
 
 
 };

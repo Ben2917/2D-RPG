@@ -1,8 +1,15 @@
+[current level]
+level_one
 [stats]
-
-all player statistics
-
+name - default
+class - test
+str - 30
+spd - 30
+chr - 30
+int - 30
+lck - 30
 [globals]
 
 global booleans to show what player has completed
 
+[end]

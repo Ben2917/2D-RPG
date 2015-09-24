@@ -3,7 +3,6 @@
 #include "game.h"
 
 
-// Should load save data to see which level should be loaded first.
 Game::Game(int w, int h, int update_target)
     : main_window("Strategy game", 0, 0, w, h, 0, update_target)
 {
@@ -33,16 +32,32 @@ void Game::LoadGame()
 
     d.ReadFile("player", "save_file.txt", save_file);
 
-    // parse the file and read which level should be loaded.
-    // The level will load the player save file and the player.
-    //
-    // if there is no save file provide defaults.
+    if(ParseSaveFile(save_file)) // returns true if it has loaded a level
+    {
+
+        
+
+    }
+    else
+    {
+
+        // load default level
+
+    }
 
     // each level will need a string key to differentiate them.
     
     int w = 0, h = 0; // variables to be filled with level width and height.
 
     main_window.SetLevelDimensions(w, h);
+
+}
+
+
+bool Game::ParseSaveFile(std::string save_file_str)
+{
+
+    
 
 }
 
